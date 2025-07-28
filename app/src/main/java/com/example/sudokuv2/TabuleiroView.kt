@@ -16,14 +16,14 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
-        color = Color.RED
+        color = Color.BLACK
         strokeWidth = 6F
     }
 
     private val thinLinePaint = Paint().apply {
         style = Paint.Style.STROKE
-        color = Color.BLACK
-        strokeWidth = 4F
+        color = Color.GRAY
+        strokeWidth = 1.5F
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
