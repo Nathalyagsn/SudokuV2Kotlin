@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.toColorInt
 
@@ -15,8 +16,8 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
 
     private var cellSizePixels = 0F
 
-    private var selectedRow = 4
-    private var selectedCol = 6
+    private var selectedRow = 0
+    private var selectedCol = 0
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
@@ -96,5 +97,21 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
                 paintToUse
             )
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                handleTouchEvent(event.x, event.y)
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun handleTouchEvent(x: Float, y: Float) {
+        selectedRow = (y / cellSizePixels).toInt()
+        selectedCol = (x / cellSizePixels).toInt()
+        invalidate()
     }
 }
