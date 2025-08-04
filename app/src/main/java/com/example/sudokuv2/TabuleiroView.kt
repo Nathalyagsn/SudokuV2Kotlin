@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.graphics.toColorInt
 
 class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet){
 
@@ -13,6 +14,9 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
     private var size = 9
 
     private var cellSizePixels = 0F
+
+    private var selectedRow = 4
+    private var selectedCol = 6
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
@@ -26,6 +30,16 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
         strokeWidth = 1.5F
     }
 
+    private val selectedCellPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.rgb(173, 216, 230)
+    }
+
+    private val conflictingCellPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.rgb(211, 211, 211)
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val sizePixels = Math.min(widthMeasureSpec, heightMeasureSpec)
@@ -34,7 +48,28 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
 
     override fun onDraw(canvas: Canvas) {
         cellSizePixels = (width / size).toFloat()
+        fillCells(canvas)
         drawLine(canvas)
+    }
+
+    private fun fillCells(canvas: Canvas) {
+        if (selectedRow == -1 || selectedCol == -1) return
+
+        for (r in 0..size){
+            for (c in 0 ..size){
+                if(r == selectedRow && c == selectedCol) {
+                    fillCell(canvas, r, c, selectedCellPaint)
+                } else if(r == selectedRow || c == selectedCol ) {
+                    fillCell(canvas, r, c, conflictingCellPaint)
+                } else if (r / sqrSize == selectedRow / sqrSize && c / sqrSize == selectedCol /sqrSize) {
+                    fillCell(canvas, r, c, conflictingCellPaint)
+                }
+            }
+        }
+    }
+
+    private fun fillCell(canvas: Canvas, r: Int, c: Int, paint: Paint) {
+        canvas.drawRect(c * cellSizePixels, r * cellSizePixels, (c + 1) * cellSizePixels, (r + 1) * cellSizePixels, paint)
     }
 
     private fun drawLine(canvas: Canvas){
