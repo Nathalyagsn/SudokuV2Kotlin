@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <com.example.sudokuv2.view.TabuleiroView
+    <com.example.sudokuv2.view.custom.TabuleiroView
         android:id="@+id/TabuleiroView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
