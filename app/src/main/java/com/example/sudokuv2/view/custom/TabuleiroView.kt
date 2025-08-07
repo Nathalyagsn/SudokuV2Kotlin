@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.example.sudokuv2.game.Cell
 
 class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
 
@@ -17,8 +18,10 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
     private var size = 9
     private var cellSizePixels = 0F
 
-    private var selectedRow = -1
-    private var selectedCol = -1
+    private var selectedRow = 0
+    private var selectedCol = 0
+
+    private var cells: List<Cell>? = null
 
     private val thickLinePaint = Paint().apply { style = Paint.Style.STROKE; color = Color.BLACK; strokeWidth = 6F }
     private val thinLinePaint = Paint().apply { style = Paint.Style.STROKE; color = Color.GRAY; strokeWidth = 1.5F }
@@ -90,6 +93,11 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
     fun updateSelectedCellUI(row: Int, col: Int) {
         selectedRow = row
         selectedCol = col
+        invalidate()
+    }
+
+    fun updateCells(cells: List<Cell>) {
+        this.cells = cells
         invalidate()
     }
 }

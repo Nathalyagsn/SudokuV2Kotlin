@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         setupListeners()
         setupObservers()
+
     }
 
     private fun setupListeners() {
@@ -40,5 +41,11 @@ class MainActivity : AppCompatActivity() {
                 tabuleiroView.updateSelectedCellUI(row, col)
             }
         }
+
+        viewModel.cellsLiveData.observe(this) { cells ->
+            tabuleiroView.updateCells(cells)
+
+        }
+        
     }
 }
