@@ -1,4 +1,4 @@
-package com.example.sudokuv2.view.custom // O pacote pode ser 'view.custom' ou só 'view', ajuste se necessário
+package com.example.sudokuv2.view.custom
 
 import android.content.Context
 import android.graphics.Canvas
