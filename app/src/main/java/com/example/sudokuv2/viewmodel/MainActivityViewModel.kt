@@ -14,23 +14,19 @@ class MainActivityViewModel : ViewModel() {
     private val board: Board
 
     init {
-        val cells = List(9 * 9) { i -> Cell(i / 9, i % 9, 0) }
+        val cells = List(9 * 9) { i -> Cell(i / 9, i % 9, i % 9) }
         board = Board(9, cells)
 
-        cellsLiveData.postValue(cells)
+        cellsLiveData.postValue(board.cells)
         selectedCellLiveData.postValue(Pair(-1, -1))
     }
 
 
     fun handleInput(number: Int) {
-
         val (row, col) = selectedCellLiveData.value ?: return
-
         if (row == -1 || col == -1) return
 
         board.getCell(row, col).value = number
-
-
         cellsLiveData.postValue(board.cells)
     }
 

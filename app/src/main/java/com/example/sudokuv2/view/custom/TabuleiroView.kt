@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -27,6 +28,7 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
     private val thinLinePaint = Paint().apply { style = Paint.Style.STROKE; color = Color.GRAY; strokeWidth = 1.5F }
     private val selectedCellPaint = Paint().apply { style = Paint.Style.FILL_AND_STROKE; color = Color.rgb(173, 216, 230) }
     private val conflictingCellPaint = Paint().apply { style = Paint.Style.FILL_AND_STROKE; color = Color.rgb(211, 211, 211) }
+    private val textPaint = Paint().apply { style = Paint.Style.FILL_AND_STROKE; color = Color.BLACK; textSize = 24F }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -36,23 +38,25 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
 
     override fun onDraw(canvas: Canvas) {
         cellSizePixels = (width / size).toFloat()
+
         fillCells(canvas)
         drawLines(canvas)
+        drawText(canvas)
     }
 
     private fun fillCells(canvas: Canvas) {
-        if (selectedRow == -1 || selectedCol == -1) return
+        cells?.forEach {
+            val r = it.row
+            val c = it.col
 
-        for (r in 0 until size) {
-            for (c in 0 until size) {
-                if (r == selectedRow && c == selectedCol) {
-                    fillCell(canvas, r, c, selectedCellPaint)
-                } else if (r == selectedRow || c == selectedCol) {
-                    fillCell(canvas, r, c, conflictingCellPaint)
-                } else if (r / sqrSize == selectedRow / sqrSize && c / sqrSize == selectedCol / sqrSize) {
-                    fillCell(canvas, r, c, conflictingCellPaint)
-                }
+            if (r == selectedRow && c == selectedCol) {
+                fillCell(canvas, r, c, selectedCellPaint)
+            } else if (r == selectedRow || c == selectedCol) {
+                fillCell(canvas, r, c, conflictingCellPaint)
+            } else if (r / sqrSize == selectedRow / sqrSize && c / sqrSize == selectedCol / sqrSize) {
+                fillCell(canvas, r, c, conflictingCellPaint)
             }
+
         }
     }
 
@@ -71,6 +75,22 @@ class TabuleiroView(context: Context, attributeSet: AttributeSet) : View(context
             canvas.drawLine(0F, i * cellSizePixels, width.toFloat(), i * cellSizePixels, paintToUse)
         }
     }
+
+    private fun drawText(canvas: Canvas){
+        cells?.forEach{
+            val row = it.row
+            val col = it.col
+            val valueString = it.value.toString()
+
+            val textBounds = Rect()
+            textPaint.getTextBounds(valueString, 0, valueString.length, textBounds)
+            val textWith = textPaint.measureText(valueString)
+            val texHeight = textBounds.height()
+
+            canvas.drawText(valueString,(col * cellSizePixels) + cellSizePixels / 2 - textWith / 2,
+                (row * cellSizePixels) + cellSizePixels / 2 - texHeight / 2, textPaint)
+    }
+        }
 
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
